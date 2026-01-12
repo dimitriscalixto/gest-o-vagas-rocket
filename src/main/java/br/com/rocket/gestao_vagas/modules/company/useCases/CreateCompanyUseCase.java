@@ -12,12 +12,12 @@ public class CreateCompanyUseCase {
     @Autowired
     private CompanyRepository companyRepository;
 
-    public void execute(Company company) {
+    public Company execute(Company company) {
         this.companyRepository
                 .findByUsernameOrEmail(company.getUsername(), company.getEmail())
                 .ifPresent((user) -> {
                     throw new UserFoundException();
                 });
-        this.companyRepository.save(company);
+        return this.companyRepository.save(company);
     }
 }
