@@ -1,0 +1,23 @@
+package br.com.rocket.gestao_vagas.modules.company.useCases;
+
+import br.com.rocket.gestao_vagas.exceptions.UserFoundException;
+import br.com.rocket.gestao_vagas.modules.company.CompanyRepository;
+import br.com.rocket.gestao_vagas.modules.company.entity.Company;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CreateCompanyUseCase {
+
+    @Autowired
+    private CompanyRepository companyRepository;
+
+    public void execute(Company company) {
+        this.companyRepository
+                .findByUsernameOrEmail(company.getUsername(), company.getEmail())
+                .ifPresent((user) -> {
+                    throw new UserFoundException();
+                });
+        this.companyRepository.save(company);
+    }
+}
