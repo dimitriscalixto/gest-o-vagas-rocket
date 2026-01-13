@@ -2,6 +2,7 @@ package br.com.rocket.gestao_vagas.modules.job.entity;
 
 import br.com.rocket.gestao_vagas.modules.company.entity.Company;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -17,13 +18,15 @@ public class Job {
     private UUID id;
     private String description;
     private String benefits;
+
+    @NotBlank(message = "Esse campo é obrigatório")
     private String level;
 
     @ManyToOne()
     @JoinColumn(name = "company_id",insertable=false,updatable=false)
     private Company company;
 
-    @Column(name = "company_id")
+    @Column(name = "company_id",nullable = false)
     private UUID companyId;
 
     @CreationTimestamp
