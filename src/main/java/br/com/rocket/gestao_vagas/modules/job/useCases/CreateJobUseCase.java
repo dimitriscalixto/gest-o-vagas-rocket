@@ -1,5 +1,6 @@
 package br.com.rocket.gestao_vagas.modules.job.useCases;
 
+import br.com.rocket.gestao_vagas.dto.CreateJobDto;
 import br.com.rocket.gestao_vagas.modules.job.JobRepository;
 import br.com.rocket.gestao_vagas.modules.job.entity.Job;
 import org.springframework.beans.factory.annotation.Autowired;
