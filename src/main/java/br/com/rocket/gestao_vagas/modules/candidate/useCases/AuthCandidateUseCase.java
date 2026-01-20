@@ -15,6 +15,7 @@ import javax.naming.AuthenticationException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class AuthCandidateUseCase {
@@ -43,7 +44,7 @@ public class AuthCandidateUseCase {
         var token = JWT.create()
                 .withIssuer("javagas")
                 .withSubject(candidate.getId().toString())
-                .withClaim("roles", Arrays.asList("candidate"))
+                .withClaim("roles", List.of("CANDIDATE"))
                 .withExpiresAt(expiresIn)
                 .sign(algorithm);
 
