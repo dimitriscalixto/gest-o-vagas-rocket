@@ -14,6 +14,6 @@ public class ListJobsByFilterUseCase {
     private JobRepository jobRepository;
 
     public List<Job> execute(String filter) {
-        return this.jobRepository.findByDescriptionContaining(filter);
+        return this.jobRepository.findByDescriptionContainingIgnoreCase(filter);
     }
 }
