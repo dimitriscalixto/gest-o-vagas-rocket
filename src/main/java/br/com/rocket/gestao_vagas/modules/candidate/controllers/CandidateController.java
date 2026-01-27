@@ -5,6 +5,13 @@ import br.com.rocket.gestao_vagas.modules.candidate.useCases.CreateCandidateUseC
 import br.com.rocket.gestao_vagas.modules.candidate.useCases.ListJobsByFilterUseCase;
 import br.com.rocket.gestao_vagas.modules.candidate.useCases.ProfileCandidateUseCase;
 import br.com.rocket.gestao_vagas.modules.job.entity.Job;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +59,14 @@ public class CandidateController {
 
     @GetMapping("/job")
     @PreAuthorize("hasRole('CANDIDATE')")
-    public List<Job> findJobByFilter(@RequestParam  String filter){
-            return this.listJobsByFilterUseCase.execute(filter);
+    @Tag(name = "Candidato", description = "Informações do candidato")
+    @Operation(summary = "Listagem de vagas disponíveis para o candidato", description = "Função responsável por listar todas as vagas disponíveis pelo filtro enviado pelo usuário")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(array = @ArraySchema(schema = @Schema(implementation = Job.class)))
+            })
+    })
+    public List<Job> findJobByFilter(@RequestParam String filter) {
+        return this.listJobsByFilterUseCase.execute(filter);
     }
 }
