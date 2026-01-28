@@ -37,13 +37,12 @@ public class JobController {
     })
     public Job create(@RequestBody CreateJobDto createJobDto, HttpServletRequest request) {
         var companyId = request.getAttribute("company_id");
-        System.out.println("companyId: " + companyId);
         var job = Job.builder()
-         .benefits(createJobDto.getBenefits())
-         .companyId(UUID.fromString(companyId.toString()))
-         .description(createJobDto.getDescription())
-         .level(createJobDto.getLevel())
-         .build();
+                .benefits(createJobDto.getBenefits())
+                .companyId(UUID.fromString(companyId.toString()))
+                .description(createJobDto.getDescription())
+                .level(createJobDto.getLevel())
+                .build();
 
         return this.createJobUseCase.execute(job);
     }

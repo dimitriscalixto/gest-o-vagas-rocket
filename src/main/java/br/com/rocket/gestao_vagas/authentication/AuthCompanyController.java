@@ -1,6 +1,7 @@
 package br.com.rocket.gestao_vagas.authentication;
 
 import br.com.rocket.gestao_vagas.dto.AuthCompanyDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ public class AuthCompanyController {
     AuthCompanyUseCase authCompanyUseCase;
 
     @PostMapping("/auth")
+    @Tag(name = "Autenticação", description = "Função responsável por autenticar a Empresa do sistema")
     public ResponseEntity<Object> auth(@RequestBody AuthCompanyDto authCompanyDto) {
         try {
             var result = this.authCompanyUseCase.execute(authCompanyDto);
