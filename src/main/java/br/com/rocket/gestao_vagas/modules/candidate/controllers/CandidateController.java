@@ -26,6 +26,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/candidate")
+@Tag(name = "Candidato", description = "Informações do candidato")
 public class CandidateController {
 
     @Autowired
@@ -38,6 +39,16 @@ public class CandidateController {
     private ListJobsByFilterUseCase listJobsByFilterUseCase;
 
     @PostMapping("/")
+    @Operation(
+            summary = "Criação do Candidato",
+            description = "Endpoint responsável pela criação do candidato"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = CandidateEntity.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "User already exists")
+    })
     public ResponseEntity<Object> create(@Valid @RequestBody CandidateEntity candidate) {
         try {
             var result = this.createCandidateUseCase.execute(candidate);
@@ -49,9 +60,8 @@ public class CandidateController {
 
     @GetMapping("/")
     @PreAuthorize("hasRole('CANDIDATE')")
-    @Tag(name = "Candidato", description = "Informações do candidato")
     @Operation(
-            summary = "Perfil do Candidadato",
+            summary = "Perfil do Candidato",
             description = "Essa função é responsável por buscara as informações do candidato"
     )
     @SecurityRequirement(name = "jwt_auth")
@@ -73,7 +83,6 @@ public class CandidateController {
 
     @GetMapping("/job")
     @PreAuthorize("hasRole('CANDIDATE')")
-    @Tag(name = "Candidato", description = "Informações do candidato")
     @Operation(summary = "Listagem de vagas disponíveis para o candidato", description = "Função responsável por listar todas as vagas disponíveis pelo filtro enviado pelo usuário")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
