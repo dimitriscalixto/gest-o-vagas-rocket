@@ -2,6 +2,7 @@ package br.com.rocket.gestao_vagas.modules.candidate.useCases;
 
 import br.com.rocket.gestao_vagas.exceptions.JobNotFoundException;
 import br.com.rocket.gestao_vagas.exceptions.UserNotFoundException;
+import br.com.rocket.gestao_vagas.modules.candidate.ApplyJobRepository;
 import br.com.rocket.gestao_vagas.modules.candidate.CandidateRepository;
 import br.com.rocket.gestao_vagas.modules.job.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +19,17 @@ public class ApplyJobCandidateUseCase {
     @Autowired
     private JobRepository jobRepository;
 
+    @Autowired
+    private ApplyJobRepository applyJobRepository;
+
     public void execute(UUID idCandidate, UUID idJob) {
         this.candidateRepository.
                 findById(idCandidate)
-                .orElseThrow( () -> new UserNotFoundException());
+                .orElseThrow(() -> new UserNotFoundException());
 
         this.jobRepository
                 .findById(idJob)
-                .orElseThrow( () -> new JobNotFoundException());
-
+                .orElseThrow(() -> new JobNotFoundException());
 
 
     }
