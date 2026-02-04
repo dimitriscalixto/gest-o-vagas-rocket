@@ -30,10 +30,10 @@ public class ApplyJobEntity {
     @JoinColumn(name = "job_id", insertable = false, updatable = false)
     private Job job;
 
-    @Column(name = "candidate_id")
+    @Column(name = "job_id")
     private UUID jobId;
 
-    @Column(name = "job_id")
+    @Column(name = "candidate_id")
     private UUID candidateId;
 
     @CreationTimestamp

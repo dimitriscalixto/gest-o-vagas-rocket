@@ -1,7 +1,9 @@
 package br.com.rocket.gestao_vagas.modules.candidate.controllers;
 
 import br.com.rocket.gestao_vagas.modules.candidate.dto.ProfileCandidateResponseDto;
+import br.com.rocket.gestao_vagas.modules.candidate.entity.ApplyJobEntity;
 import br.com.rocket.gestao_vagas.modules.candidate.entity.CandidateEntity;
+import br.com.rocket.gestao_vagas.modules.candidate.useCases.ApplyJobCandidateUseCase;
 import br.com.rocket.gestao_vagas.modules.candidate.useCases.CreateCandidateUseCase;
 import br.com.rocket.gestao_vagas.modules.candidate.useCases.ListJobsByFilterUseCase;
 import br.com.rocket.gestao_vagas.modules.candidate.useCases.ProfileCandidateUseCase;
@@ -37,6 +39,9 @@ public class CandidateController {
 
     @Autowired
     private ListJobsByFilterUseCase listJobsByFilterUseCase;
+
+    @Autowired
+    private ApplyJobCandidateUseCase applyJobCandidateUseCase;
 
     @PostMapping("/")
     @Operation(
@@ -92,5 +97,24 @@ public class CandidateController {
     @SecurityRequirement(name = "jwt_auth")
     public List<Job> findJobByFilter(@RequestParam String filter) {
         return this.listJobsByFilterUseCase.execute(filter);
+    }
+
+    @PostMapping("/job/apply")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    @SecurityRequirement(name = "jwt_auth")
+    @Operation(summary = "Aplicação em um job existente", description = "Endpoint responsável pela aplicação no job de um candidate")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(array = @ArraySchema(schema = @Schema(implementation = ApplyJobEntity.class)))
+            })
+    })
+    public ResponseEntity<Object> applyJob(HttpServletRequest request, @RequestBody UUID jobId) {
+        var candidateId = request.getAttribute("candidate_id");
+        try {
+            var result = this.applyJobCandidateUseCase.execute(UUID.fromString(candidateId.toString()), jobId);
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
