@@ -20,6 +20,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import utils.TestUtils;
 
+import java.util.UUID;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -64,7 +66,22 @@ public class CreateJobControllerTest {
                         .header("Authorization", TestUtils.generateToken(company.getId()))
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk());
-        System.out.println(result);
+    }
+
+    @Test
+    public void shoudleNotBeAbleToCreateANewJobWithANotExistingComapany() throws Exception {
+
+        CreateJobDto createdJobDto = CreateJobDto.builder()
+                .benefits("BENEFITS_TEST")
+                .description("DESCRIPTION_TEST")
+                .level("LEVEL_TEST")
+                .build();
+
+        mvc.perform(MockMvcRequestBuilders.post("/company/job/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtils.objectToJSON(createdJobDto))
+                .header("Authorization", TestUtils.generateToken(UUID.randomUUID()))
+        ).andExpect(MockMvcResultMatchers.status().isBadRequest());
 
     }
 

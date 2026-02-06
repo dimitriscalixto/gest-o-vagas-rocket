@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,15 +36,19 @@ public class JobController {
                     @Content(schema = @Schema(implementation = Job.class))
             })
     })
-    public Job create(@RequestBody CreateJobDto createJobDto, HttpServletRequest request) {
+    public ResponseEntity<Object> create(@RequestBody CreateJobDto createJobDto, HttpServletRequest request) {
         var companyId = request.getAttribute("company_id");
-        var job = Job.builder()
-                .benefits(createJobDto.getBenefits())
-                .companyId(UUID.fromString(companyId.toString()))
-                .description(createJobDto.getDescription())
-                .level(createJobDto.getLevel())
-                .build();
-
-        return this.createJobUseCase.execute(job);
+        try {
+            var job = Job.builder()
+                    .benefits(createJobDto.getBenefits())
+                    .companyId(UUID.fromString(companyId.toString()))
+                    .description(createJobDto.getDescription())
+                    .level(createJobDto.getLevel())
+                    .build();
+            var result = this.createJobUseCase.execute(job);
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
     }
 }
