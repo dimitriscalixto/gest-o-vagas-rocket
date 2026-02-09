@@ -13,17 +13,16 @@ public class JWTCandidateProvider {
     @Value("${security.token.secret.candidate}")
     private String secretKey;
 
-    public DecodedJWT validateToken(String token){
+    public DecodedJWT validateToken(String token) {
         token = token.replace("Bearer ", "");
 
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
-        try{
+        try {
             return JWT.require(algorithm)
                     .build()
                     .verify(token);
-        } catch (JWTVerificationException e){
-            e.printStackTrace();
+        } catch (JWTVerificationException e) {
             return null;
         }
     }
